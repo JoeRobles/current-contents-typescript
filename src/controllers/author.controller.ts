@@ -12,22 +12,24 @@ import { docClient } from '../models/aws.model';
 
 export class AuthorController {
 
-  public createAuthor(req: Request, res: Response) {
+  private _docClient = docClient;
+
+  public createAuthor(req, res): void {
     let Item = req.body.Item;
     Item.authorId = uniqid();
     const params: AuthorParamsPut = {
       TableName: AuthorEnum.TableName,
       Item,
     };
-    docClient.put(params, (err, data) => {
-      if(err){
+    this._docClient.put(params, (err, data): void => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
     });
   }
 
-  public deleteAuthor(req: Request, res: Response) {
+  public deleteAuthor(req: Request, res: Response): void {
     const { authorId } = req.params;
     const params: AuthorParams = {
       TableName: AuthorEnum.TableName,
@@ -35,15 +37,15 @@ export class AuthorController {
         authorId
       }
     };
-    docClient.delete(params, (err, data) => {
-      if(err){
+    this._docClient.delete(params, (err, data): void => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
     });
   }
 
-  public getAuthor(req: Request, res: Response) {
+  public getAuthor(req: Request, res: Response): void {
     const { authorId } = req.params;
     const params: AuthorParams = {
       TableName: AuthorEnum.TableName,
@@ -51,21 +53,21 @@ export class AuthorController {
         authorId
       }
     };
-    docClient.get(params, (err, data) => {
-      if(err){
+    this._docClient.get(params, (err, data): void => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
     });
   }
 
-  public listAuthors(req: Request, res: Response) {
+  public listAuthors(req: Request, res: Response): void {
     const params: AuthorParamsScan = {
       TableName: AuthorEnum.TableName,
       Limit: 1000,
     };
-    docClient.scan(params, (err, data) => {
-      if(err){
+    this._docClient.scan(params, (err, data): void => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
@@ -73,7 +75,7 @@ export class AuthorController {
   }
 
 
-  public updateAuthor(req: Request, res: Response) {
+  public updateAuthor(req: Request, res: Response): void {
     let UpdateExpression = [], ExpressionAttributeValues = [];
     const Item = req.body.Item;
     const { authorId } = req.params;
@@ -95,8 +97,8 @@ export class AuthorController {
       ExpressionAttributeValues: ExpressionAttributeValues,
       ReturnValues: 'UPDATED_NEW',
     };
-    docClient.update(params, (err, data) => {
-      if(err){
+    this._docClient.update(params, (err, data): void => {
+      if (err) {
         res.send(err);
       }
       res.send(data);

@@ -12,15 +12,19 @@ import { docClient } from '../models/aws.model';
 
 export class PublicationController {
 
-  public createPublication(req: Request, res: Response) {
+  public uuid;
+  private _docClient = docClient;
+
+  public createPublication(req, res) {
     let Item = req.body.Item;
-    Item.publicationId = uniqid();
+    this.uuid = uniqid();
+    Item.publicationId = this.uuid;
     const params: PublicationParamsPut = {
       TableName: PublicationEnum.TableName,
       Item,
     };
-    docClient.put(params, (err, data) => {
-      if(err){
+    this._docClient.put(params, (err, data) => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
@@ -35,8 +39,8 @@ export class PublicationController {
         publicationId
       }
     };
-    docClient.delete(params, (err, data) => {
-      if(err){
+    this._docClient.delete(params, (err, data) => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
@@ -51,8 +55,8 @@ export class PublicationController {
         publicationId
       }
     };
-    docClient.get(params, (err, data) => {
-      if(err){
+    this._docClient.get(params, (err, data) => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
@@ -64,8 +68,8 @@ export class PublicationController {
       TableName: PublicationEnum.TableName,
       Limit: 1000,
     };
-    docClient.scan(params, (err, data) => {
-      if(err){
+    this._docClient.scan(params, (err, data) => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
@@ -74,7 +78,8 @@ export class PublicationController {
 
 
   public updatePublication(req: Request, res: Response) {
-    let UpdateExpression = [], ExpressionAttributeValues = [];
+    let UpdateExpression = [];
+    let ExpressionAttributeValues = [];
     const Item = req.body.Item;
     const { publicationId } = req.params;
 
@@ -95,8 +100,8 @@ export class PublicationController {
       ExpressionAttributeValues: ExpressionAttributeValues,
       ReturnValues: 'UPDATED_NEW',
     };
-    docClient.update(params, (err, data) => {
-      if(err){
+    this._docClient.update(params, (err, data) => {
+      if (err) {
         res.send(err);
       }
       res.send(data);
