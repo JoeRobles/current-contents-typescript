@@ -12,11 +12,13 @@ import { docClient } from '../models/aws.model';
 
 export class AuthorController {
 
+  public uuid;
   private _docClient = docClient;
 
   public createAuthor(req, res): void {
     let Item = req.body.Item;
-    Item.authorId = uniqid();
+    this.uuid = uniqid();
+    Item.authorId = this.uuid;
     const params: AuthorParamsPut = {
       TableName: AuthorEnum.TableName,
       Item,
