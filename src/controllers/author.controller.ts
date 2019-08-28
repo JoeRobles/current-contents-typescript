@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { keys } from 'lodash';
 import * as uniqid from 'uniqid';
 
@@ -6,7 +5,8 @@ import { AuthorEnum } from '../models/author.enum';
 import {
   AuthorParams,
   AuthorParamsPut,
-  AuthorParamsScan, AuthorParamsUpdate
+  AuthorParamsScan,
+  AuthorParamsUpdate
 } from '../models/author.interface';
 import { docClient } from '../models/aws.model';
 
@@ -31,7 +31,7 @@ export class AuthorController {
     });
   }
 
-  public deleteAuthor(req: Request, res: Response): void {
+  public deleteAuthor(req, res): void {
     const { authorId } = req.params;
     const params: AuthorParams = {
       TableName: AuthorEnum.TableName,
@@ -47,7 +47,7 @@ export class AuthorController {
     });
   }
 
-  public getAuthor(req: Request, res: Response): void {
+  public getAuthor(req, res): void {
     const { authorId } = req.params;
     const params: AuthorParams = {
       TableName: AuthorEnum.TableName,
@@ -63,7 +63,7 @@ export class AuthorController {
     });
   }
 
-  public listAuthors(req: Request, res: Response): void {
+  public listAuthors(req, res): void {
     const params: AuthorParamsScan = {
       TableName: AuthorEnum.TableName,
       Limit: 1000,
@@ -77,7 +77,7 @@ export class AuthorController {
   }
 
 
-  public updateAuthor(req: Request, res: Response): void {
+  public updateAuthor(req, res): void {
     let UpdateExpression = [], ExpressionAttributeValues = [];
     const Item = req.body.Item;
     const { authorId } = req.params;

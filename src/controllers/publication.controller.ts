@@ -31,7 +31,7 @@ export class PublicationController {
     });
   }
 
-  public deletePublication(req: Request, res: Response) {
+  public deletePublication(req, res) {
     const { publicationId } = req.params;
     const params: PublicationParams = {
       TableName: PublicationEnum.TableName,
@@ -47,7 +47,7 @@ export class PublicationController {
     });
   }
 
-  public getPublication(req: Request, res: Response) {
+  public getPublication(req, res) {
     const { publicationId } = req.params;
     const params: PublicationParams = {
       TableName: PublicationEnum.TableName,
@@ -63,7 +63,7 @@ export class PublicationController {
     });
   }
 
-  public listPublications(req: Request, res: Response) {
+  public listPublications(req, res) {
     const params: PublicationParamsScan = {
       TableName: PublicationEnum.TableName,
       Limit: 1000,
@@ -77,7 +77,7 @@ export class PublicationController {
   }
 
 
-  public updatePublication(req: Request, res: Response) {
+  public updatePublication(req, res) {
     let UpdateExpression = [];
     let ExpressionAttributeValues = [];
     const Item = req.body.Item;

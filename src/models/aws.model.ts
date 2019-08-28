@@ -9,5 +9,5 @@ AWS.config.update({
   region: AwsCredentials.REGION,
 });
 
-new AWS.S3({apiVersion: '2016-11-07'});
+new AWS.S3({ apiVersion: '2016-11-07' });
 export const docClient = new AWS.DynamoDB.DocumentClient();
