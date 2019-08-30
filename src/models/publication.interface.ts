@@ -24,6 +24,7 @@ export interface PublicationParamsUpdate {
 
 export interface PublicationItem {
   publicationId: string;
+  authors?: string[];
   title?: string;
   publicationDate?: string;
   body?: string;

@@ -25,6 +25,7 @@ export const PublicationStub = {
     UpdateExpression: 'set publicationId = :publicationId, title = :title, publicationDate = :publicationDate, body = :body',
     ExpressionAttributeValues: [
       ':publicationId: 123456',
+      ':authors: [123456]',
       ':title: Publication title',
       ':publicationDate: 01/01/1970',
       ':body: Publication body'
@@ -33,6 +34,7 @@ export const PublicationStub = {
   },
   PublicationItem: <PublicationItem> {
     publicationId: '123456',
+    authors: ['123456'],
     title: 'Publication title',
     publicationDate: '01/01/1970',
     body: 'Publication body'

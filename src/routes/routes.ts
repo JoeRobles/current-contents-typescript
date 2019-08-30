@@ -1,21 +1,17 @@
-import { Request, Response } from 'express';
-
 import { AuthorController } from '../controllers/author.controller';
 import { PublicationController } from '../controllers/publication.controller';
+import { WelcomeController } from '../controllers/welcome.controller';
 
 export class Routes {
 
   public authorController: AuthorController = new AuthorController();
   public publicationController: PublicationController = new PublicationController();
+  public welcomeController: WelcomeController = new WelcomeController();
 
   public routes(app): void {
 
     app.route('/')
-      .get((req: Request, res: Response) => {
-        res.status(200).send({
-          message: 'Welcome to Current Contents.'
-        })
-      });
+      .get(this.welcomeController.welcome);
 
     app.route('/author')
       .get(this.authorController.listAuthors)
