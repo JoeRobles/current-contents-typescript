@@ -1,11 +1,11 @@
 export interface PublicationParams {
   TableName: string;
-  Key: PublicationKey;
+  Key: PublicationItem;
 }
 
 export interface PublicationParamsPut {
   TableName: string;
-  Item: PublicationKey;
+  Item: PublicationItem;
 }
 
 export interface PublicationParamsScan {
@@ -15,14 +15,14 @@ export interface PublicationParamsScan {
 
 export interface PublicationParamsUpdate {
   TableName: string;
-  Key: PublicationKey;
+  Key: PublicationItem;
   ConditionExpression: string;
   UpdateExpression: string;
   ExpressionAttributeValues: string[];
   ReturnValues: string;
 }
 
-interface PublicationKey {
+export interface PublicationItem {
   publicationId: string;
   title?: string;
   publicationDate?: string;

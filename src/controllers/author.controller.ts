@@ -14,13 +14,15 @@ export class AuthorController {
 
   public uuid;
   private _docClient = docClient;
+  private Limit: number = AuthorEnum.Limit;
+  private TableName: string = AuthorEnum.TableName;
 
   public createAuthor(req, res): void {
     let Item = req.body.Item;
     this.uuid = uniqid();
     Item.authorId = this.uuid;
     const params: AuthorParamsPut = {
-      TableName: AuthorEnum.TableName,
+      TableName: this.TableName,
       Item,
     };
     this._docClient.put(params, (err, data): void => {
@@ -32,9 +34,9 @@ export class AuthorController {
   }
 
   public deleteAuthor(req, res): void {
-    const { authorId } = req.params;
-    const params: AuthorParams = {
-      TableName: AuthorEnum.TableName,
+    const { authorId } = req.params,
+    params: AuthorParams = {
+      TableName: this.TableName,
       Key: {
         authorId
       }
@@ -48,9 +50,9 @@ export class AuthorController {
   }
 
   public getAuthor(req, res): void {
-    const { authorId } = req.params;
-    const params: AuthorParams = {
-      TableName: AuthorEnum.TableName,
+    const { authorId } = req.params,
+    params: AuthorParams = {
+      TableName: this.TableName,
       Key: {
         authorId
       }
@@ -65,8 +67,8 @@ export class AuthorController {
 
   public listAuthors(req, res): void {
     const params: AuthorParamsScan = {
-      TableName: AuthorEnum.TableName,
-      Limit: 1000,
+      TableName: this.TableName,
+      Limit: this.Limit,
     };
     this._docClient.scan(params, (err, data): void => {
       if (err) {
@@ -79,8 +81,8 @@ export class AuthorController {
 
   public updateAuthor(req, res): void {
     let UpdateExpression = [], ExpressionAttributeValues = [];
-    const Item = req.body.Item;
-    const { authorId } = req.params;
+    const Item = req.body.Item,
+    { authorId } = req.params;
 
     keys(Item).forEach((k) => {
       UpdateExpression.push(`${k} = :${k}`);
@@ -90,7 +92,7 @@ export class AuthorController {
     ExpressionAttributeValues[`:${AuthorEnum.TableKey}`] = authorId;
 
     const params: AuthorParamsUpdate = {
-      TableName: AuthorEnum.TableName,
+      TableName: this.TableName,
       Key: {
         authorId
       },

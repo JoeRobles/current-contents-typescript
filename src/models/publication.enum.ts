@@ -1,4 +1,5 @@
 export enum PublicationEnum {
-  TableName = 'CC_Publication',
+  Limit = 1000,
   TableKey = 'publicationId',
+  TableName = 'CC_Publication',
 }

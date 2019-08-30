@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { keys } from 'lodash';
 import * as uniqid from 'uniqid';
 
@@ -6,7 +5,8 @@ import { PublicationEnum } from '../models/publication.enum';
 import {
   PublicationParams,
   PublicationParamsPut,
-  PublicationParamsScan, PublicationParamsUpdate
+  PublicationParamsScan,
+  PublicationParamsUpdate
 } from '../models/publication.interface';
 import { docClient } from '../models/aws.model';
 
@@ -14,13 +14,15 @@ export class PublicationController {
 
   public uuid;
   private _docClient = docClient;
+  private Limit: number = PublicationEnum.Limit;
+  private TableName: string = PublicationEnum.TableName;
 
-  public createPublication(req, res) {
+  public createPublication(req, res): void {
     let Item = req.body.Item;
     this.uuid = uniqid();
     Item.publicationId = this.uuid;
     const params: PublicationParamsPut = {
-      TableName: PublicationEnum.TableName,
+      TableName: this.TableName,
       Item,
     };
     this._docClient.put(params, (err, data) => {
@@ -31,10 +33,10 @@ export class PublicationController {
     });
   }
 
-  public deletePublication(req, res) {
-    const { publicationId } = req.params;
-    const params: PublicationParams = {
-      TableName: PublicationEnum.TableName,
+  public deletePublication(req, res): void {
+    const { publicationId } = req.params,
+    params: PublicationParams = {
+      TableName: this.TableName,
       Key: {
         publicationId
       }
@@ -47,10 +49,10 @@ export class PublicationController {
     });
   }
 
-  public getPublication(req, res) {
-    const { publicationId } = req.params;
-    const params: PublicationParams = {
-      TableName: PublicationEnum.TableName,
+  public getPublication(req, res): void {
+    const { publicationId } = req.params,
+    params: PublicationParams = {
+      TableName: this.TableName,
       Key: {
         publicationId
       }
@@ -63,10 +65,10 @@ export class PublicationController {
     });
   }
 
-  public listPublications(req, res) {
+  public listPublications(req, res): void {
     const params: PublicationParamsScan = {
-      TableName: PublicationEnum.TableName,
-      Limit: 1000,
+      TableName: this.TableName,
+      Limit: this.Limit,
     };
     this._docClient.scan(params, (err, data) => {
       if (err) {
@@ -77,11 +79,9 @@ export class PublicationController {
   }
 
 
-  public updatePublication(req, res) {
-    let UpdateExpression = [];
-    let ExpressionAttributeValues = [];
-    const Item = req.body.Item;
-    const { publicationId } = req.params;
+  public updatePublication(req, res): void {
+    let UpdateExpression = [], ExpressionAttributeValues = [];
+    const Item = req.body.Item, { publicationId } = req.params;
 
     keys(Item).forEach((k) => {
       UpdateExpression.push(`${k} = :${k}`);
@@ -91,7 +91,7 @@ export class PublicationController {
     ExpressionAttributeValues[`:${PublicationEnum.TableKey}`] = publicationId;
 
     const params: PublicationParamsUpdate = {
-      TableName: PublicationEnum.TableName,
+      TableName: this.TableName,
       Key: {
         publicationId
       },

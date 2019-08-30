@@ -1,4 +1,5 @@
 export enum AuthorEnum {
-  TableName = 'CC_Author',
+  Limit = 1000,
   TableKey = 'authorId',
+  TableName = 'CC_Author',
 }

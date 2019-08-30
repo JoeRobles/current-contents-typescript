@@ -1,11 +1,11 @@
 export interface AuthorParams {
   TableName: string;
-  Key: AuthorKey;
+  Key: AuthorItem;
 }
 
 export interface AuthorParamsPut {
   TableName: string;
-  Item: AuthorKey;
+  Item: AuthorItem;
 }
 
 export interface AuthorParamsScan {
@@ -15,14 +15,14 @@ export interface AuthorParamsScan {
 
 export interface AuthorParamsUpdate {
   TableName: string;
-  Key: AuthorKey;
+  Key: AuthorItem;
   ConditionExpression: string;
   UpdateExpression: string;
   ExpressionAttributeValues: string[];
   ReturnValues: string;
 }
 
-interface AuthorKey {
+export interface AuthorItem {
   authorId: string;
   birthDate?: string;
   email?: string;

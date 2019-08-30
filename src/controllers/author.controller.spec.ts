@@ -4,10 +4,28 @@ import { assert } from 'chai';
 import { afterEach, before, beforeEach, suite, test } from 'mocha';
 
 import { AuthorController } from './author.controller';
+import { AuthorEnum } from '../models/author.enum';
+import { AuthorParams, AuthorParamsPut, AuthorParamsScan, AuthorParamsUpdate } from '../models/author.interface';
+import { AuthorStub } from '../models/author.stub';
 
 suite('AuthorController', () => {
-  let controller: AuthorController;
-  let error = new Error('Your error');
+  let controller: AuthorController, error = new Error('Your error');
+  const apiVersion = { apiVersion: '2012-08-10' },
+  defaultAuthor: AuthorParams = {
+    TableName: <string> AuthorEnum.TableName,
+    Key: {
+      authorId: '123456'
+    }
+  },
+  defaultAuthorParams: AuthorParamsPut = {
+    TableName: <string> AuthorEnum.TableName,
+    Item: {
+      authorId: '123456'
+    }
+  },
+  res = {
+    send: () => {}
+  };
 
   before(async (done) => {
     done();
@@ -18,10 +36,6 @@ suite('AuthorController', () => {
     controller = new AuthorController();
   });
 
-  afterEach(() => {
-    AWSMock.restore('DynamoDB.DocumentClient');
-  });
-
   test('should init', () => {
     assert.isDefined(controller, 'not initialized');
   });
@@ -29,42 +43,31 @@ suite('AuthorController', () => {
   test('should create an author', async () => {
     const req = {
       body: {
-        Item: {
-          birthDate: '01/01/1970',
-          email: 'a@b.co',
-          authorName: 'author name'
-        }
+        Item: AuthorStub.AuthorItem
       }
+    },
+    payload: AuthorParamsPut = {
+      TableName: <string> AuthorEnum.TableName,
+      Item: req.body.Item
     };
-    const payload = { TableName: '', Item: req.body.Item };
 
     AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback: Function) => {
       callback(null, payload);
     });
 
-    let params = {
-      TableName: '',
-      Item: {}
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {
-      }
-    };
-
+    let params = defaultAuthorParams;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.createAuthor(req, res);
 
     assert.deepEqual(await client.put(params).promise(), payload);
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should throw an error on creating an author', async () => {
     const req = {
       body: {
-        Item: {
-          birthDate: '01/01/1970',
-          email: 'a@b.co',
-          authorName: 'author name'
-        }
+        Item: AuthorStub.AuthorItem
       }
     };
 
@@ -73,14 +76,10 @@ suite('AuthorController', () => {
     });
 
     let params = {
-      TableName: '',
-      Item: {}
+      TableName: <string> AuthorEnum.TableName,
+      Item: req.body.Item
     };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {}
-    };
-
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.createAuthor(req, res);
 
     await client.put(params).promise().then(
@@ -89,6 +88,8 @@ suite('AuthorController', () => {
         assert.equal(e, error);
       }
     );
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should delete an author', async () => {
@@ -97,25 +98,24 @@ suite('AuthorController', () => {
         authorId: '123456',
       }
     };
-    const payload = { TableName: '', Item: req.params.authorId };
+    const payload: AuthorParams = {
+      TableName: <string> AuthorEnum.TableName,
+      Key: {
+        authorId: req.params.authorId
+      }
+    };
 
     AWSMock.mock('DynamoDB.DocumentClient', 'delete', (params, callback: Function) => {
       callback(null, payload);
     });
 
-    let params = {
-      TableName: '',
-      Key: {}
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {
-      }
-    };
-
+    let params = defaultAuthor;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.deleteAuthor(req, res);
 
     assert.deepEqual(await client.delete(params).promise(), payload);
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should throw an error on deleting an author', async () => {
@@ -129,15 +129,8 @@ suite('AuthorController', () => {
       callback(error);
     });
 
-    let params = {
-      TableName: '',
-      Key: {}
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {}
-    };
-
+    let params = defaultAuthor;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.deleteAuthor(req, res);
 
     await client.delete(params).promise().then(
@@ -146,6 +139,8 @@ suite('AuthorController', () => {
         assert.equal(e, error);
       }
     );
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should get an author', async () => {
@@ -160,19 +155,13 @@ suite('AuthorController', () => {
       callback(null, payload);
     });
 
-    let params = {
-      TableName: '',
-      Key: {}
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {
-      }
-    };
-
+    let params = defaultAuthor;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.getAuthor(req, res);
 
     assert.deepEqual(await client.get(params).promise(), payload);
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should throw an error on getting an author', async () => {
@@ -186,15 +175,8 @@ suite('AuthorController', () => {
       callback(error);
     });
 
-    let params = {
-      TableName: '',
-      Key: {}
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {}
-    };
-
+    let params = defaultAuthor;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.getAuthor(req, res);
 
     await client.get(params).promise().then(
@@ -203,6 +185,8 @@ suite('AuthorController', () => {
         assert.equal(e, error);
       }
     );
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should list all authors', async () => {
@@ -215,19 +199,16 @@ suite('AuthorController', () => {
       callback(null, payload);
     });
 
-    let params = {
-      TableName: '',
-      Limit: 1000,
+    let params: AuthorParamsScan = {
+      TableName: <string> AuthorEnum.TableName,
+      Limit: <number> AuthorEnum.Limit,
     };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {
-      }
-    };
-
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.listAuthors(req, res);
 
     assert.deepEqual(await client.scan(params).promise(), payload);
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should throw an error on listing all authors', async () => {
@@ -239,15 +220,11 @@ suite('AuthorController', () => {
       callback(error);
     });
 
-    let params = {
-      TableName: '',
-      Limit: 1000
+    let params: AuthorParamsScan = {
+      TableName: <string> AuthorEnum.TableName,
+      Limit: <number> AuthorEnum.Limit
     };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {}
-    };
-
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.listAuthors(req, res);
 
     await client.scan(params).promise().then(
@@ -256,17 +233,14 @@ suite('AuthorController', () => {
         assert.equal(e, error);
       }
     );
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should update an author', async () => {
     const req = {
       body: {
-        Item: {
-          authorId: '123456',
-          birthDate: '01/01/1970',
-          email: 'a@b.co',
-          authorName: 'author name'
-        }
+        Item: AuthorStub.AuthorItem
       },
       params: {
         authorId: '123456',
@@ -278,34 +252,19 @@ suite('AuthorController', () => {
       callback(null, payload);
     });
 
-    let params = {
-      TableName: '',
-      Key: {},
-      ConditionExpression: 'a = :b',
-      UpdateExpression: 'set ',
-      ExpressionAttributeValues: [''],
-      ReturnValues: 'UPDATED_NEW',
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {
-      }
-    };
-
+    let params: AuthorParamsUpdate = AuthorStub.AuthorParamsUpdate;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.updateAuthor(req, res);
 
     assert.deepEqual(await client.update(params).promise(), payload);
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 
   test('should throw an error on updating an author', async () => {
     const req = {
       body: {
-        Item: {
-          authorId: '123456',
-          birthDate: '01/01/1970',
-          email: 'a@b.co',
-          authorName: 'author name'
-        }
+        Item: AuthorStub.AuthorItem
       },
       params: {
         authorId: '123456',
@@ -316,19 +275,8 @@ suite('AuthorController', () => {
       callback(error);
     });
 
-    let params = {
-      TableName: '',
-      Key: {},
-      ConditionExpression: 'a = :b',
-      UpdateExpression: 'set ',
-      ExpressionAttributeValues: [''],
-      ReturnValues: 'UPDATED_NEW',
-    };
-    const client = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10' });
-    const res = {
-      send: () => {}
-    };
-
+    let params: AuthorParamsUpdate = AuthorStub.AuthorParamsUpdate;
+    const client = new AWS.DynamoDB.DocumentClient(apiVersion);
     controller.updateAuthor(req, res);
 
     await client.update(params).promise().then(
@@ -337,5 +285,7 @@ suite('AuthorController', () => {
         assert.equal(e, error);
       }
     );
+
+    AWSMock.restore('DynamoDB.DocumentClient');
   });
 });
