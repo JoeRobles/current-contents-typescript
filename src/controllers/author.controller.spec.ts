@@ -1,14 +1,14 @@
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import { assert } from 'chai';
-import { afterEach, before, beforeEach, suite, test } from 'mocha';
+import { afterEach, before, beforeEach, describe, it } from 'mocha';
 
 import { AuthorController } from './author.controller';
 import { AuthorEnum } from '../models/author.enum';
 import { AuthorParams, AuthorParamsPut, AuthorParamsScan, AuthorParamsUpdate } from '../models/author.interface';
 import { AuthorStub } from '../models/author.stub';
 
-suite('AuthorController', () => {
+describe('AuthorController', () => {
   let controller: AuthorController, error = new Error('Your error');
   const apiVersion = { apiVersion: '2012-08-10' },
   defaultAuthor: AuthorParams = {
@@ -36,11 +36,11 @@ suite('AuthorController', () => {
     controller = new AuthorController();
   });
 
-  test('should init', () => {
+  it('should init', () => {
     assert.isDefined(controller, 'not initialized');
   });
 
-  test('should create an author', async () => {
+  it('should create an author', async () => {
     const req = {
       body: {
         Item: AuthorStub.AuthorItem
@@ -64,7 +64,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on creating an author', async () => {
+  it('should throw an error on creating an author', async () => {
     const req = {
       body: {
         Item: AuthorStub.AuthorItem
@@ -92,7 +92,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should delete an author', async () => {
+  it('should delete an author', async () => {
     const req = {
       params: {
         authorId: '123456',
@@ -118,7 +118,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on deleting an author', async () => {
+  it('should throw an error on deleting an author', async () => {
     const req = {
       params: {
         authorId: '123456',
@@ -143,7 +143,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should get an author', async () => {
+  it('should get an author', async () => {
     const req = {
       params: {
         authorId: '123456',
@@ -164,7 +164,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on getting an author', async () => {
+  it('should throw an error on getting an author', async () => {
     const req = {
       params: {
         authorId: '123456',
@@ -189,7 +189,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should list all authors', async () => {
+  it('should list all authors', async () => {
     const req = {
       params: {}
     };
@@ -211,7 +211,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on listing all authors', async () => {
+  it('should throw an error on listing all authors', async () => {
     const req = {
       params: {}
     };
@@ -237,7 +237,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should update an author', async () => {
+  it('should update an author', async () => {
     const req = {
       body: {
         Item: AuthorStub.AuthorItem
@@ -261,7 +261,7 @@ suite('AuthorController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on updating an author', async () => {
+  it('should throw an error on updating an author', async () => {
     const req = {
       body: {
         Item: AuthorStub.AuthorItem

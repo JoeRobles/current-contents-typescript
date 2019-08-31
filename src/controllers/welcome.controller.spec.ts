@@ -1,22 +1,22 @@
 import { assert } from 'chai';
-import { afterEach, before, beforeEach, suite, test } from 'mocha';
+import { afterEach, before, beforeEach, describe, it } from 'mocha';
 import * as sinon from 'sinon';
 
 import { WelcomeController } from './welcome.controller';
 import { WelcomeEnum } from '../models/welcome.enum';
 
-suite('WelcomeController', () => {
+describe('WelcomeController', () => {
   let controller: WelcomeController;
 
   beforeEach(() => {
     controller = new WelcomeController();
   });
 
-  test('should init', () => {
+  it('should init', () => {
     assert.isDefined(controller, 'not initialized');
   });
 
-  test('should welcome', () => {
+  it('should welcome', () => {
     const status = sinon.spy();
     const send = sinon.spy();
     const req = {

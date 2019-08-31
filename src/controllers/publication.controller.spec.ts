@@ -1,7 +1,7 @@
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import { assert } from 'chai';
-import { afterEach, before, beforeEach, suite, test } from 'mocha';
+import { afterEach, before, beforeEach, describe, it } from 'mocha';
 
 import { PublicationController } from './publication.controller';
 import { PublicationEnum } from '../models/publication.enum';
@@ -13,7 +13,7 @@ import {
 } from '../models/publication.interface';
 import { PublicationStub } from '../models/publication.stub';
 
-suite('PublicationController', () => {
+describe('PublicationController', () => {
   let controller: PublicationController, error = new Error('Your error');
   const apiVersion = { apiVersion: '2012-08-10' },
     defaultPublication: PublicationParams = {
@@ -41,11 +41,11 @@ suite('PublicationController', () => {
     controller = new PublicationController();
   });
 
-  test('should init', () => {
+  it('should init', () => {
     assert.isDefined(controller, 'not initialized');
   });
 
-  test('should create a publication', async () => {
+  it('should create a publication', async () => {
     const req = {
       body: {
         Item: PublicationStub.PublicationItem
@@ -69,7 +69,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on creating a publication', async () => {
+  it('should throw an error on creating a publication', async () => {
     const req = {
       body: {
         Item: PublicationStub.PublicationItem
@@ -97,7 +97,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should delete a publication', async () => {
+  it('should delete a publication', async () => {
     const req = {
       params: {
         publicationId: '123456',
@@ -123,7 +123,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on deleting a publication', async () => {
+  it('should throw an error on deleting a publication', async () => {
     const req = {
       params: {
         publicationId: '123456',
@@ -148,7 +148,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should get a publication', async () => {
+  it('should get a publication', async () => {
     const req = {
       params: {
         publicationId: '123456',
@@ -169,7 +169,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on getting a publication', async () => {
+  it('should throw an error on getting a publication', async () => {
     const req = {
       params: {
         publicationId: '123456',
@@ -194,7 +194,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should list all publications', async () => {
+  it('should list all publications', async () => {
     const req = {
       params: {}
     };
@@ -216,7 +216,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on listing all publications', async () => {
+  it('should throw an error on listing all publications', async () => {
     const req = {
       params: {}
     };
@@ -242,7 +242,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should update a publication', async () => {
+  it('should update a publication', async () => {
     const req = {
       body: {
         Item: PublicationStub.PublicationItem
@@ -266,7 +266,7 @@ suite('PublicationController', () => {
     AWSMock.restore('DynamoDB.DocumentClient');
   });
 
-  test('should throw an error on updating an author', async () => {
+  it('should throw an error on updating an author', async () => {
     const req = {
       body: {
         Item: PublicationStub.PublicationItem
